@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-navbar>        
+      <ion-buttons start>
+          <button ion-button icon-only (click)="onToggleMenu()">
+              <ion-icon name="menu"></ion-icon>
+          </button>
+      </ion-buttons>
+      <ion-title>Liste des livres</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <button ion-item
+            icon-start
+            *ngFor="let book of booksList; let i = index"
+            (click)="onLoadBook(i)"
+            [ngClass]="{'is-on': !book.isLendBook, 'is-off': book.isLendBook}">
+      <ion-icon name="book" [color]="book.isLendBook ? 'danger' : 'secondary'"></ion-icon>
+      {{ book.nameBook }} - {{ book.nameAuthor }} ({{ book.yearPublish }})
+    </button>
+  </ion-list>
+  <ion-card>
+      <ion-card-header>Données</ion-card-header>
+      <ion-card-content>
+          <button ion-button block outline (click)="onSaveList()">Enregistrer</button>
+          <button ion-button block outline (click)="onFetchList()">Récupérer</button>
+      </ion-card-content>
+  </ion-card>
+</ion-content>

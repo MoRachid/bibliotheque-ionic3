@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-navbar>        
+      <ion-buttons start>
+          <button ion-button icon-only (click)="onToggleMenu()">
+              <ion-icon name="menu"></ion-icon>
+          </button>
+      </ion-buttons>
+      <ion-title>Liste des CD</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <button ion-item
+            icon-start
+            *ngFor="let cd of cdList; let i = index"
+            (click)="onLoadCd(i)"
+            [ngClass]="{'is-on': !cd.isLendCd, 'is-off': cd.isLendCd}">
+      <ion-icon name="disc" [color]="cd.isLendCd ? 'danger' : 'secondary'"></ion-icon>
+      {{ cd.nameCd }} - {{ cd.nameArtist }} ({{ cd.yearPublish }})
+    </button>
+  </ion-list>
+  <ion-card>
+      <ion-card-header>Données</ion-card-header>
+      <ion-card-content>
+          <button ion-button block outline (click)="onSaveList()">Enregistrer</button>
+          <button ion-button block outline (click)="onFetchList()">Récupérer</button>
+      </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons>
+      <button ion-button clear (click)="dismissModal()">Fermer</button>
+    </ion-buttons>
+    <ion-title><ion-icon name="disc" [color]="cd.isLendCd ? 'danger' : 'secondary'"></ion-icon> CD</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-card [ngClass]="{'is-on': !cd.isLendCd, 'is-off': cd.isLendCd}">
+    <ion-card-header>{{ cd.nameCd }} - {{ cd.nameArtist }}</ion-card-header>
+    <ion-card-content>
+      <p>{{ cd.yearPublish }} - {{ cd.labelCd }}</p>
+      <p>{{ cd.price }}€</p>
+      <p *ngIf="cd.isLendCd">Personne qui emprunte: {{cd.namePerson }}</p>
+    </ion-card-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <button
+            ion-button
+            full
+            color="secondary"
+            [disabled]="cd.isLendCd"
+            (click)="onToggleCd()">Prêter</button>
+        </ion-col>
+        <ion-col>
+          <button
+            ion-button
+            full
+            color="danger"
+            [disabled]="!cd.isLendCd"
+            (click)="onToggleCd()">Rendre</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <form #f="ngForm" (ngSubmit)="onSubmitForm(f)">
+        <ion-list>
+          <ion-item>
+            <ion-label>Nom de la personne</ion-label>
+            <ion-input name="namePerson" [(ngModel)]="cd.namePerson"></ion-input>
+          </ion-item>
+        </ion-list>
+        <button type="button"
+              ion-button
+              full
+              color="danger"
+              (click)="onDeleteName()">
+              Supprimer nom
+        </button>
+        <button type="submit"
+              ion-button
+              full
+              color="secondary">
+              Enregistrer nom
+        </button>
+    </form>
+  </ion-card>
+</ion-content>
