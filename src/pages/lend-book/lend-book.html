@@ -37,7 +37,7 @@
       </ion-row>
     </ion-grid>
     <form #f="ngForm" (ngSubmit)="onSubmitForm(f)">
-        <ion-list>
+        <ion-list *ngIf="book.isLendBook">
           <ion-item>
             <ion-label>Nom de la personne</ion-label>
             <ion-input name="namePerson" [(ngModel)]="book.namePerson"></ion-input>

@@ -2,7 +2,7 @@ import { Book } from './../../models/Book';
 import { DataService } from './../../servives/data.service';
 import { LendBookPage } from './../lend-book/lend-book';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MenuController, ModalController, ToastController, LoadingController } from 'ionic-angular';
+import { MenuController, ModalController } from 'ionic-angular';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -16,9 +16,7 @@ export class BookListPage implements OnInit, OnDestroy{
 
   constructor(private modalCtrl: ModalController,
               private booksService: DataService,
-              private menuCtrl: MenuController,
-              private toastCtrl: ToastController,
-              private loadingCtrl: LoadingController) {}
+              private menuCtrl: MenuController) {}
 
   ngOnInit() {
     this.booksSubscription = this.booksService.books$.subscribe(
@@ -40,55 +38,5 @@ export class BookListPage implements OnInit, OnDestroy{
 
   ngOnDestroy() {
     this.booksSubscription.unsubscribe();
-  }
-
-  onSaveList() {
-    let loader = this.loadingCtrl.create({
-      content: 'Sauvegarde en cours…'
-    });
-    loader.present();
-    this.booksService.saveBook().then(
-      () => {
-        loader.dismiss();
-        this.toastCtrl.create({
-          message: 'Données sauvegardées !',
-          duration: 3000,
-          position: 'bottom'
-        }).present();
-      },
-      (error) => {
-        loader.dismiss();
-        this.toastCtrl.create({
-          message: error,
-          duration: 3000,
-          position: 'bottom'
-        }).present();
-      }
-    );
-  }
-
-  onFetchList() {
-    let loader = this.loadingCtrl.create({
-      content: 'Récuperation en cours…'
-    });
-    loader.present();
-    this.booksService.retreiveBook().then(
-      () => {
-        loader.dismiss();
-        this.toastCtrl.create({
-          message: 'Données récupérées !',
-          duration: 3000,
-          position: 'bottom'
-        }).present();
-      },
-      (error) => {
-        loader.dismiss();
-        this.toastCtrl.create({
-          message: error,
-          duration: 3000,
-          position: 'bottom'
-        }).present();
-      }
-    );
   }
 }

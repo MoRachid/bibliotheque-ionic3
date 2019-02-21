@@ -1,5 +1,4 @@
 import * as firebase from 'firebase';
-import { UrlSerializer } from 'ionic-angular';
 
 export class AuthService{
 

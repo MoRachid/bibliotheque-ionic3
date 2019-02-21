@@ -3,8 +3,10 @@ import { Book } from './../models/Book';
 import { Subject } from 'rxjs/Subject';
 import * as firebase from 'firebase';
 import DataSnapshot = firebase.database.DataSnapshot;
+import { Injectable } from '@angular/core';
+import { Storage } from "@ionic/storage";
 
-
+@Injectable()
 export class DataService{
 
     books$ = new Subject<Book[]>();
@@ -123,6 +125,7 @@ export class DataService{
         }
     ];
 
+    constructor(private storage: Storage) {}
 
     emitBooks() {
         this.books$.next(this.bookList.slice());
@@ -132,22 +135,27 @@ export class DataService{
         this.cds$.next(this.cdList.slice());
     }
 
-    //Pour l'enregistrement des données des livres
-    saveBook() {
+    //Pour l'enregistrement des données des livres et des CDs
+    saveData() {
         return new Promise((resolve,reject) => {
             firebase.database().ref('Books').set(this.bookList).then(
                 (data: DataSnapshot) => {
                     resolve(data);
                 },
+            )
+            firebase.database().ref('CDs').set(this.cdList).then(
+                (data: DataSnapshot) => {
+                    resolve(data);
+                },
                 (error) => {
                     reject(error);
-                }
+                }   
             );
         });
     }
 
-    // Pour la récupération des données des livres
-    retreiveBook() {
+    // Pour la récupération des données des livres et des CDs
+    retreiveData() {
         return new Promise((resolve,reject) => {
             firebase.database().ref('Books').once('value').then(
                 (data: DataSnapshot) => {
@@ -155,31 +163,8 @@ export class DataService{
                     this.emitBooks();
                     resolve('Données récupérées avec succés !');
                 },
-                (error) => {
-                    reject(error);
-                }
-            );
-        });
-    }
-
-    //Pour l'enregistrement des données des CDs
-    saveCd() {
-        return new Promise((resolve, reject) => {
-            firebase.database().ref('Cd').set(this.cdList).then(
-                (data: DataSnapshot) => {
-                    resolve(data);
-                },
-                (error) => {
-                    reject(error);
-                }
-            );
-        });
-    }
-
-    // Pour la récupération des données des CDs
-    retreiveCd() {
-        return new Promise((resolve, reject) => {
-            firebase.database().ref('Cd').once('value').then(
+            )
+            firebase.database().ref('CDs').once('value').then(
                 (data: DataSnapshot) => {
                     this.cdList = data.val();
                     this.emitCds();
@@ -189,6 +174,43 @@ export class DataService{
                     reject(error);
                 }
             )
-        })
+        });
+    }
+
+    
+
+    onToggleMedia(item: any) {
+        let CDOrBook = item;
+		CDOrBook.isLend = !CDOrBook.isLend;
+    }
+
+    saveBookList() {
+        this.storage.set('Books', this.bookList);
+    }
+
+    saveCdList() {
+        this.storage.set('CDs', this.cdList);
+    }
+
+    fetchBookList() {
+        this.storage.get('Books').then(
+          (list) => {
+            if (list && list.length) {
+              this.bookList = list.slice();
+            }
+            this.emitBooks();
+          }
+        );
+    }
+
+    fetchCdList() {
+        this.storage.get('CDs').then(
+          (list) => {
+            if (list && list.length) {
+              this.cdList = list.slice();
+            }
+            this.emitCds();
+          }
+        )
     }
 }
